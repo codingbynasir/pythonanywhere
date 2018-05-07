@@ -1,0 +1,194 @@
+{% extends 'base.html' %}
+{% block title %}Test details: {{ test.name.name }}{% endblock %}
+{% block stylesheet %}
+	<style>
+	.main-content {
+	margin-top: 100px;
+	}
+	nav{
+	background-color: #1C2331!important;
+	}
+	.inner-content, .ratings {
+	border: 1px solid #ccc;
+	box-shadow: 1px 1px 12px 2px #ccc;
+	}
+	.thospital{
+	padding: 20px;
+	}
+	.inner-content{
+	margin-bottom: 25px;
+	}
+	.commenter {
+	display: flex;
+	}
+    .commenter span{
+        padding-left: 15px;
+    }
+    .single-rating{
+        margin-bottom: 10px;
+    }
+	.rating-details{
+        padding: 25px 5px;
+        background: #f9f9f9;
+        border: 1px solid #dfdfdf;
+        border-radius: 3px;
+        clear: both;
+        font-size: 15px;
+        line-height: 1.5em!important;
+        margin: 5px 0 0;
+    }
+    div.ratings h3.text-success.header, div.ratings .all-ratings, #rating_form {
+    padding: 10px;
+}
+	</style>
+{% endblock %}
+{% block content %}
+	<div class="main-content">
+		<div class="container">
+			<div class="breadcrumbs">
+				<div class="bc-icons-2">
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item"><a class="black-text" href="{% url 'medical:index' %}">Home</a><i class="fa fa-caret-right mx-2" aria-hidden="true"></i></li>
+						<li class="breadcrumb-item"><a class="black-text" href="{% url 'medical:all_test' %}">Tests</a><i class="fa fa-caret-right mx-2" aria-hidden="true"></i></li>
+						<li class="breadcrumb-item"><a class="black-text" href="">Test Details</a><i class="fa fa-caret-right mx-2" aria-hidden="true"></i></li>
+						<li class="breadcrumb-item active">{{ test.name.name }}</li>
+					</ol>
+				</div>
+			</div>
+			<!--Breadcrumbs-->
+			<div class="single-test wow fadeIn inner-content">
+				<div class="thead" style="background: #f2f2f2;">
+					<div class="row">
+						<div class="col-md-8">
+							<h3><strong>Test name: </strong>{{ test.name.name }}</h3>
+						</div>
+						<div class="col-md-4">
+							<h5>Test price: {{ test.price }}</h5>
+						</div>
+					</div>
+				</div>
+				<div class="ttitle">
+					<div class="row">
+                        <div class="col-md-2 col-5">
+                            Test category
+                        </div>
+                        <div class="col-md-10 col-7">
+                            : {{ test.name.category.name }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2 col-5">Home deliverable</div>
+                        <div class="col-md-10 col-7">
+                            : {% if test.is_home_deliverable %}
+                                Yes
+                                {% else %}
+                                No
+                                {% endif %}
+                        </div>
+                    </div>
+				</div>
+				<div class="tdetails">
+					<p>{{ test.test_details|safe }}</p>
+					<div class="buy">
+						<div class="row">
+							<div class="col-md-8"></div>
+							<div class="col-md-4">
+								<div class="test-action wow zoomIn">
+                                    {% if request.user.is_authenticated %}
+                                        {% if request.session.hospital is None %}
+                                            {% if is_bought %}
+                                                <a href="{% url 'billing:order' id=orderId %}" class="btn btn-info">View order</a>
+                                                <div class="text-muted">You already ordered this test</div>
+                                                {% else %}
+                                                <form action="" method="POST">
+                                                    {% csrf_token %}
+                                                    <input type="number" name="test" value="{{ test.id }}" style="visibility: hidden;">
+                                                    <button class="btn btn-success" type="submit" name="buy">Buy now</button>
+                                                </form>
+                                            {% endif %}
+                                            {% elif request.session.hospital == test.hospital.name.username %}
+                                            <a href="{% url 'medical:authorize_test_update' id=test.id %}" class="btn btn-outline-light-green">Update test</a>
+                                        {% endif %}
+                                    {% else %}
+                                        <a class="btn btn-success" href="{% url 'accounts:login' %}?next={% url 'medical:test_details' has_test_id=test.id %}">Buy now</a>
+                                    {% endif %}
+                                </div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="thospital wow fadeIn" data-wow-duration="0.5s" data-wow-delay="0.5s">
+					<div class="row">
+						<div class="col-md-5">
+							<h1>Hospital Info:</h1>
+							<p>Name: {{ test.hospital.name.get_full_name }}</p>
+							<p>Email: {{ test.hospital.email }}</p>
+							<p>Phone: {{ test.hospital.phone }}</p>
+							<p>Address: {{ test.hospital.address }}, {{ test.hospital.division }}- {{ test.hospital.zip_code }}</p>
+						</div>
+						<div class="col-md-7">
+							<iframe width="600" height="450" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?key=AIzaSyA43-pm17h9AYwodjdvqYMVXc3z60BaJX0&q={{ test.hospital.name.get_full_name }}" allowfullscreen></iframe>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="ratings">
+				<h3 class="text-success header" style="border-bottom: 1px solid #d4caca;">Feedback and reviews</h3>
+				<div class="all-ratings" id="all-rating_id">
+					{% for r in rating %}
+						<div class="single-rating">
+							<div class="commenter">
+								<img src="{{ r.user.image.url }}" alt="" style="height: 70px; width: 60px;border-radius: 50%;">
+								<span><h3>{{ r.user.name.username }}</h3><h6 class="text-muted">{{ r.date }}</h6></span>
+							</div>
+							<div class="rating-details">
+								<div class="rating-rate"><strong class="font-weight-bold">Rating: </strong>{{ r.rating }}</div>
+								<p>Comment: {{ r.comments|title|safe }}</p>
+								<h4><a href="{{ r.proof.url }}" target="_blank">View proof</a></h4>
+							</div>
+						</div>
+                        {% empty %}
+                        <h1>Sorry! No Feedback Found</h1>
+					{% endfor %}
+				</div>
+				<div class="rating-form wow fadeIn" data-wow-duration="0.5s" data-wow-delay="0.5s" id="form">
+					{% if request.user.is_authenticated %}
+						{% if request.session.hospital %}
+                            {% else %}
+                            <form action="" method="POST" id="rating_form" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                {{ rform.as_p }}
+                                <button class="btn btn-primary" type="submit" name="ratingbutton" onclick="submitForm()">Submit</button>
+                            </form>
+						{% endif %}
+					{% else %}
+						<h3 class="text-danger">Please <a href="{% url 'accounts:login' %}?next=/details/{{ test.id }}#form">login</a> to give feedback</h3>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+{% block script %}
+<script>
+	$(document).ready(function() {
+	    $('form p').addClass('input-group row');
+	    $('label').addClass('col-md-3');
+	    $('input').addClass('form-control col-md-9');
+	    $('select').addClass('form-control');
+	    $('textarea').addClass('form-control');
+	    $("#nav-search").removeClass('col-md-9');
+	    $('form#rating_form').submit(function(event) {
+	        var img = $('#id_proof').val();
+	        var ext = img.substring(img.lastIndexOf('.') + 1);
+	        if (ext === "gif" || ext === "GIF" || ext === "JPEG" || ext === "jpeg" || ext === "jpg" || ext === "JPG") {
+	            return true;
+	        } else {
+	            $('#id_proof').addClass('is-invalid');
+	            alert('Please select valid image');
+	            event.preventDefault();
+	        }
+	    });
+	});
+</script>
+{% endblock %}

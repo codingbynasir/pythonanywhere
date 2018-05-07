@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>{% block title %}
+    {% endblock %}</title>
+    <!-- Font Awesome -->
+    <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    {% load staticfiles %}
+    <!-- Bootstrap core CSS -->
+    <link href="{% static "css/bootstrap.min.css" %}" rel="stylesheet">
+    <!-- Material Design Bootstrap -->
+    <link href="{% static "css/mdb.min.css" %}" rel="stylesheet">
+    <!-- Your custom styles (optional) -->
+    <link href="{% static "css/style.min.css" %}" rel="stylesheet">
+    <style>
+    a.nav-link.dropdown-toggle.waves-effect.waves-light {
+    color: white;
+    }
+    body{
+    font-family: 'Raleway', sans-serif;
+    }
+    div.datas{
+    border: 1px solid #ded6d6;
+    box-shadow: 1px 1px 6px 2px #ccc;
+    padding: 5px;
+    }
+    div#example_wrapper {
+    margin-top: 5px;
+    }
+    .thead, .ttitle, .tdetails {
+    border-bottom: 1px solid #d4caca;
+    padding: 20px;
+    }
+    select.form-control:not([size]):not([multiple]) {
+        height: auto;
+    }
+
+    {#Breadcrumbs css#}
+    .bc-icons-2 .breadcrumb-item + .breadcrumb-item::before {
+    content: none; }
+    .bc-icons-2 .breadcrumb-item.active {
+    color: #455a64; }
+    /*Style For Browser Scrollbar*/
+    /* width */
+    ::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+        background: lightblue;
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+        background: lightgray;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+      background: #297e0f;
+    }
+    </style>
+
+
+    {% block stylesheet %}
+    {% endblock %}
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar fixed-top navbar-expand-lg navbar-dark scrolling-navbar">
+      <div class="container">
+        <!-- Brand -->
+        <a class="navbar-brand" href="{% url 'medical:index' %}">
+          <strong>SMT</strong>
+        </a>
+        <!-- Collapse -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+        aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+        </button>
+        <!-- Links -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <!-- Left -->
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item test">
+              <a class="nav-link" href="{% url 'medical:all_test' %}">Diagnostic Tests
+                <span class="sr-only">(current)</span>
+              </a>
+            </li>
+            <li class="nav-item package">
+              <a class="nav-link" href="{% url 'medical:test_packages' %}">Test Packages</a>
+            </li>
+            <li class="nav-item hospital">
+              <a class="nav-link" href="{% url 'medical:all_hospitals' %}">Hospitals</a>
+            </li>
+            <li class="nav-item donor">
+              <a class="nav-link" href="#">Blood bank</a>
+            </li>
+          </ul>
+          <!-- Right -->
+          <ul class="navbar-nav">
+            {% if request.user.is_authenticated %}
+              <!-- Basic dropdown -->
+              <li class="btn-group">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ request.user.username|title }}</a>
+                <div class="dropdown-menu">
+                  {% if request.session.hospital %}
+                    <a class="dropdown-item" href="{% url 'medical:logged_hospital' %}">Dashboard</a>
+                  {% else %}
+                    <a class="dropdown-item" href="{% url 'accounts:patient' username=request.user.username %}">Profile</a>
+                  {% endif %}
+                  <a class="dropdown-item" href="#">Setting</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="{% url 'accounts:logout' %}">Logout</a>
+                </div>
+              </li>
+            {% else %}
+              <li class="nav-item login">
+                <a href="{% url 'accounts:login' %}" class="nav-link">
+                  <i class="fa fa-sign-in" aria-hidden="true"></i>Login
+                </a>
+              </li>
+            {% endif %}
+            <li class="nav-item">
+              <form action="{% url 'medical:search' %}" method="get">
+                <input type="text" name="q" value="{{ request.GET.q }}" class="form-control" id="nav-search" placeholder="Search test" style="background: transparent; color: #fff3cd;">
+              </form>
+            </li>
+            {% if request.user.is_authenticated %}
+              {% if request.user.is_active and request.user.is_superuser %}
+                <li class="nav-item">
+                  <a href="/admin" class="nav-link">Dashboard</a>
+                </li>
+              {% endif %}
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <!-- Navbar -->
+    {% block content %}
+    {% endblock %}
+    <!--Footer-->
+    <footer class="page-footer text-center font-small mt-4 wow fadeIn">
+      <hr class="my-4">
+      <!-- Social icons -->
+      <div class="pb-4">
+        <a href="#" target="_blank">
+          <i class="fa fa-facebook mr-3"></i>
+        </a>
+        <a href="#" target="_blank">
+          <i class="fa fa-twitter mr-3"></i>
+        </a>
+        <a href="#" target="_blank">
+          <i class="fa fa-youtube mr-3"></i>
+        </a>
+        <a href="#" target="_blank">
+          <i class="fa fa-google-plus mr-3"></i>
+        </a>
+        <a href="#" target="_blank">
+          <i class="fa fa-dribbble mr-3"></i>
+        </a>
+        <a href="#" target="_blank">
+          <i class="fa fa-pinterest mr-3"></i>
+        </a>
+        <a href="#" target="_blank">
+          <i class="fa fa-github mr-3"></i>
+        </a>
+        <a href="#" target="_blank">
+          <i class="fa fa-codepen mr-3"></i>
+        </a>
+      </div>
+      <!-- Social icons -->
+      <!--Copyright-->
+      <div class="footer-copyright py-3">
+        © 2018 Copyright:
+        <a href="https://fb.com/404detector" target="_blank"> Saimoon, Naeem, Ahsan, Nasir </a>
+      </div>
+      <!--/.Copyright-->
+    </footer>
+    <!--/.Footer-->
+    <!-- SCRIPTS -->
+    <!-- JQuery -->
+    <script type="text/javascript" src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+    <!-- Bootstrap tooltips -->
+    <script type="text/javascript" src="{% static 'js/popper.min.js' %}"></script>
+    <!-- Bootstrap core JavaScript -->
+    <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
+    <!-- MDB core JavaScript -->
+    <script type="text/javascript" src="{% static 'js/mdb.min.js' %}"></script>
+    <!-- Initializations -->
+    <script type="text/javascript">
+    // Animations initialization
+    new WOW().init();
+    </script>
+    {% block script %}
+    {% endblock %}
+  </body>
+</html>

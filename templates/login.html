@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% block title %}Please login and learn more{% endblock %}
+{% block stylesheet %}
+    <style>
+    .main-content {
+    margin-top: 100px;
+    }
+    nav{
+    background-color: #1C2331!important;
+    }
+    .has-error{
+        border-color: red!important;
+    }
+    .has-success{
+        border-color: green;
+    }
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="container main-content">
+        <!-- Card -->
+        <div class="row justify-content-md-center">
+            <div class="col-md-6 col-sm-12">
+                <div class="card ">
+                    <!-- Card body -->
+                    <div class="card-body">
+                        <!-- Material form login -->
+                        <form action="" method="POST" class="login-form">
+                            <p class="h4 text-center mb-4">Sign in</p>
+                            {% if msg %}
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <strong>Error! </strong>{{ msg }}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            {% endif %}
+                            {% csrf_token %}
+                            <!-- Material input email -->
+                            <div class="md-form form-md">
+                                <i class="fa fa-envelope prefix"></i>
+                                <input type="text" name="username" id="username" class="form-control form-control-md">
+                                <label for="username">Username</label>
+                            </div>
+                            <!-- Material input password -->
+                            <div class="md-form form-md">
+                                <i class="fa fa-lock prefix"></i>
+                                <input type="password" name="password" id="password" class="form-control form-control-md">
+                                <label for="password">Password</label>
+                            </div>
+                            <div class="text-center mt-4">
+                                <button class="btn btn-default" type="submit">Login</button>
+                            </div>
+                        </form>
+                        <!-- Material form login -->
+                        <div class="card-footer">
+                            <div class="options font-weight-light">
+                                <p>Not a member? <a href="{% url 'accounts:register' %}">Sign Up</a></p>
+                                <p>Forgot <a href="#">Password?</a></p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Card body -->
+                </div>
+                <!-- Card -->
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script>
+    $(document).ready(function(){
+
+        $("form.login-form").submit(function(event){
+            $('#username').removeClass('has-error');
+            $('#password').removeClass('has-error');
+            $('p.text-danger').remove();
+            if ( username=$('#username').val()== "") {
+                $('#username').addClass('has-error');
+                $('#username').after('<p class="text-danger">Username is required</p>');
+                event.preventDefault();
+            }
+            else{
+                $('#username').addClass('has-success');
+                $('p.text-danger').remove();
+            }
+            if ( username=$('#password').val()== "") {
+                $('#password').addClass('has-error');
+                $('#password').after('<p class="text-danger">Password is required</p>');
+                event.preventDefault();
+            }
+    });
+    });
+    </script>
+{% endblock %}

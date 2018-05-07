@@ -1,0 +1,210 @@
+{% extends 'dashboard/base_site.html' %}
+{% block title %}
+    View order details
+{% endblock %}
+{% block breadcrumb %}
+	<ul>
+        <li><a href="{% url 'medical:logged_hospital' %}">Dashboard<i class="fa fa-chevron-circle-right"></i></a></li>
+        <li><a href="">Order<i class="fa fa-chevron-circle-right"></i></a></li>
+        {% if type == 'test' %}
+            <li><a href="">Test<i class="fa fa-chevron-circle-right"></i></a></li>
+            <li><a href="">Details</a></li>
+            {% elif type == 'package' %}
+            <li><a href="">Package<i class="fa fa-chevron-circle-right"></i></a></li>
+            <li><a href="">Details</a></li>
+        {% endif %}
+    </ul>
+{% endblock %}
+{% block dashboardcontent %}
+     {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <div {% if message.tags %} class="{{ message.tags }}"{% endif %}>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <i class="fa fa-check-circle"></i>{{ message }}</div>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <style>
+    div.main-content div.row div {
+        line-height: 30px;
+    }
+    </style>
+    <div class="single-order-details">
+        <div class="customer-info">
+            <div class="card">
+                <div class="card-header deep-orange lighten-1 white-text">Customer Informations</div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-2 col-3">Name</div>
+                        <div class="col-md-10 col-9">: {{ order.user.name.get_full_name }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2 col-3">Email</div>
+                        <div class="col-md-10 col-9">: {{ order.user.name.email }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2 col-3">Phone</div>
+                        <div class="col-md-10 col-9">: {{ order.user.phone }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% if type == 'test' %}
+            <div class="customer-info">
+                <div class="card">
+                <div class="card-header deep-purple lighten-1 white-text">Order informations {% if order.status != 'Archived' %}
+                    <span class="pull pull-right"><a href="{% url 'medical:authorize_single_order_update' id=order.id %}"><i class="fa fa-edit"></i></a></span>
+                {% endif %}</div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-2 col-3">Test Name</div>
+                            <div class="col-md-10 col-9">: {{ order.test.name.name }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2 col-3">Price</div>
+                            <div class="col-md-10 col-9">: {{ order.test.price }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2 col-3">Payment status</div>
+                            <div class="col-md-10 col-9">: {{ order.payment_status }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2 col-3">Token Number</div>
+                            <div class="col-md-10 col-9">: #{{ order.token_num }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2 col-3">Verification</div>
+                            <div class="col-md-10 col-9">: {% if order.verify %}
+                                <span class="text-success">Verified</span>
+                                {% else %}
+                                <span class="text-danger">Not verified</span>
+                            {% endif %}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2 col-3">Test taking time</div>
+                            <div class="col-md-10 col-9">: {{ order.test_taking_date }} at {{ order.test_taking_time }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% elif type == 'package' %}
+            <div class="customer-info">
+                <div class="card">
+                <div class="card-header deep-purple lighten-1 white-text">Order informations {% if order.status != 'Archived' %}
+                    <span class="pull pull-right"><a href="{% url 'medical:authorize_package_order_update' id=order.id %}"><i class="fa fa-edit"></i></a></span>
+                {% endif %}</div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-2 col-6">Package Name</div>
+                            <div class="col-md-10 col-6">: {{ order.package_name.name }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2 col-6">Price</div>
+                            <div class="col-md-10 col-6">: {{ order.package_name.price }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2 col-6">Payment status</div>
+                            <div class="col-md-10 col-6">: {{ order.payment_status }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2 col-6">Token Number</div>
+                            <div class="col-md-10 col-6">: #{{ order.token_num }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2 col-6">Verification</div>
+                            <div class="col-md-10 col-6">: {% if order.verify %}
+                                <span class="text-success">Verified</span>
+                                {% else %}
+                                <span class="text-danger">Not verified</span>
+                            {% endif %}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2 col-3">Test taking time</div>
+                            <div class="col-md-10 col-9">: {{ order.test_taking_date }} at {{ order.test_taking_time }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="billing-info">
+            <div class="card">
+            <div class="card-header deep-purple lighten-1 white-text">Billing info</div>
+                <div class="card-body">
+                    {% if billing %}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-4 col-6">Order ID</div>
+                                    <div class="col-md-8 col-6">: #{{ billing.order.id }}</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 col-6">Paid amount</div>
+                                    <div class="col-md-8 col-6">: {{ billing.paid_amount }}</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 col-6">Account No</div>
+                                    <div class="col-md-8 col-6">: #{{ billing.account_number }}</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-4 col-6">Transaction ID</div>
+                                    <div class="col-md-8 col-6">: #{{ billing.transaction_id }}</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 col-6">Paid On</div>
+                                    <div class="col-md-8 col-6">: {{ billing.paid_on }}</div>
+                                </div>
+                            </div>
+                        </div>
+                        {% else %}
+                        No billing info
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="shipping-info">
+            <div class="card">
+            <div class="card-header deep-orange lighten-1 white-text">Shipping info</div>
+                <div class="card-body">
+                    {% if shipping %}
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-2 col-4">City</div>
+                                    <div class="col-md-10 col-8">: {{ shipping.city }}</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2 col-4">Area</div>
+                                    <div class="col-md-10 col-8">: {{ shipping.area }}</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2 col-4">Address</div>
+                                    <div class="col-md-10 col-8">: {{ shipping.address }}</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2 col-4">Phone</div>
+                                    <div class="col-md-10 col-8">: {{ shipping.patient.phone }}</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2 col-4">Alternative</div>
+                                    <div class="col-md-10 col-8">: {{ shipping.alternative_mobile_no }}</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2 col-4">Email</div>
+                                    <div class="col-md-10 col-8">: {{ shipping.patient.name.email }}</div>
+                                </div>
+                            </div>
+                        </div>
+                        {% else %}
+                        No shipping info
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

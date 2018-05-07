@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% block title %}Change password{% endblock %}
+{% block stylesheet %}
+    <style>
+    .main-content {
+    margin-top: 100px;
+    }
+    nav{
+    background-color: #1C2331!important;
+    }
+    form.form {
+        padding: 10px;
+        border: 1px solid lightgray;
+        box-shadow: 1px 1px 5px 1px #aaaace;
+    }
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="main-content">
+        <div class="container wow fadeIn">
+            {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                        <div {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <form action="" method="POST" class="form">
+                {% csrf_token %}
+                {#            {{ form.as_p }}#}
+                <div class="form-group">
+                    <label for="id_old_password" class="old_password">Old Password:</label>
+                    <input type="password" name="old_password" class="form-control" id="id_old_password">
+                </div>
+                <div class="form-group">
+                    <label for="id_new_password1" class="new_password1">New Password:</label>
+                    <input type="password" name="new_password1" class="form-control" id="id_new_password1">
+                </div>
+                <div class="form-group">
+                    <label for="id_new_password2" class="new_password2">New password confirmation:</label>
+                    <input type="password" name="new_password2" class="form-control" id="id_new_password2">
+                </div>
+                <div class="hide">
+                    Your password can't be a commonly used password.
+                Your password can't be entirely numeric.</div>
+                <button class="btn btn-primary">Save changes</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script>
+    $(document).ready(function(){
+    $('form').submit(function (event) {
+    $('.text-danger').remove();
+    if($('#id_old_password').val()==""){
+    $('#id_old_password').addClass('is-invalid');
+    $('#id_old_password').after('<p class="text-danger">Old password is required</p>');
+    event.preventDefault();
+    }else{
+    $('#id_old_password').removeClass('is-invalid');
+    $('#id_old_password').addClass('is-valid');
+    }
+    if($('#id_new_password1').val()==""){
+    $('#id_new_password1').addClass('is-invalid');
+    $('#id_new_password1').after('<p class="text-danger">New password is required</p>');
+    event.preventDefault();
+    }else if($('#id_new_password1').val().length<=7){
+    $('#id_new_password1').after('<p class="text-danger">Your password must contain at least 8 characters.</p>');
+    event.preventDefault();
+    }else{
+    $('#id_new_password1').removeClass('is-invalid');
+    $('#id_new_password1').addClass('is-valid');
+    }
+    if($('#id_new_password2').val()==""){
+    $('#id_new_password2').addClass('is-invalid');
+    $('#id_new_password2').after('<p class="text-danger">Confirmation password is required</p>');
+    event.preventDefault();
+    }else{
+    var pass1 =$('#id_new_password1').val();
+    var pass2 =$('#id_new_password2').val();
+    if(pass1==pass2){
+    $('#id_new_password2').removeClass('is-invalid');
+    $('#id_new_password2').addClass('is-valid');
+    }else{
+    $('#id_new_password2').after('<p class="text-danger"><ul><li class="text-danger">Confirmation password is not matched </li><li class="text-danger"> Your password can\'t be entirely numeric.</li></ul></p>');
+    event.preventDefault();
+    }
+    }
+    });
+    });
+    </script>
+{% endblock %}

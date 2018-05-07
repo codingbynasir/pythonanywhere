@@ -1,0 +1,70 @@
+{% extends 'dashboard/base_site.html' %}
+{% block breadcrumb %}
+	<ul>
+        <li>Dashboard</li>
+    </ul>
+{% endblock %}
+{% block dashboardcontent %}
+	<div class="row">
+		<div class="col-md-3 col-6">
+			<div class="inner wow fadeIn" data-wow-duration="0.3s" data-wow-delay="0.5s">
+				<a href="{% url 'medical:authorize_tests' %}">
+					<i class="fa fa-stethoscope fa-5x" style="background: rgba(5, 158, 102, 0.79);"></i>
+					<span class="info text-center waves-effect">
+						<h3>Test</h3>
+						<h2><b>{% if test_number %}
+							{{ test_number }}
+						{% else %}
+							0
+						{% endif %}</b></h2>
+					</span>
+				</a>
+			</div>
+		</div>
+		<div class="col-md-3 col-6">
+			<div class="inner wow fadeIn" data-wow-duration="0.3s" data-wow-delay="0.8s">
+				<a href="{% url 'medical:authorize_package_view' %}">
+					<i class="fa fa-user-md fa-5x" style="background: #29AEFF;"></i>
+					<span class="info text-center waves-light" style="background:#007bff;">
+						<h3>Package</h3>
+						<h2><b>{% if total_pack %}
+							{{ total_pack }}
+						{% else %}
+							0
+						{% endif %}</b></h2>
+					</span>
+				</a>
+			</div>
+		</div>
+		<div class="col-md-3 col-6">
+			<div class="inner wow fadeIn" data-wow-duration="0.3s" data-wow-delay="0.8s">
+				<a href="{% url 'medical:authorize_order' %}">
+					<i class="fa fa-shopping-bag fa-5x"></i>
+					<span class="info text-center waves-light" style="background-color: #00c851!important;">
+						<h3>Orders</h3>
+						<h2><b>{% if total_order %}
+							{{ total_order }}
+						{% else %}
+							0
+						{% endif %}</b></h2>
+					</span>
+				</a>
+			</div>
+		</div>
+		<div class="col-md-3 col-6">
+			<div class="inner wow fadeIn" data-wow-duration="0.3s" data-wow-delay="0.5s">
+				<a href="">
+					<i class="fa fa-exclamation-triangle  fa-5x" aria-hidden="true" style="background: #b93440;"></i>
+					<span class="info text-center waves-light" style="background-color: #ff3547!important;">
+						<h3>Feedback</h3>
+						<h2><b>{% if total_feedback %}
+							{{ total_feedback }}
+						{% else %}
+							0
+						{% endif %}</b></h2>
+					</span>
+				</a>
+			</div>
+		</div>
+	</div>
+{% endblock %}

@@ -1,0 +1,184 @@
+ <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Invoice</title>
+</head>
+<body>
+<div class="">
+    {% if type == "package" %}
+        <div class="invoice-header">
+        <table>
+            <tr>
+                <td>
+                    <h1>{{ test.package_name.hospital.name.get_full_name }}</h1>
+                    <h4>{{ test.package_name.hospital.address }}, {{ test.package_name.hospital.division }}-{{ test.package_name.hospital.zip_code }}</h4>
+                </td>
+                <td>
+                    <div class="invoice-info">
+                        <h2>Test Time and Date</h2>
+                        <p>Test Taking Date: {{ test.test_taking_date }}</p>
+                        <p>Test Taking Time: {{ test.test_taking_time }}</p>
+                        <small class="text-muted">(Please be present at this time)</small>
+                        <p>Token: {{ test.token_num }}</p>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="invoice-body">
+        <div class="patient">
+            <h2>Patient informations</h2>
+            <table style="border: 1px solid lightblue; padding: 5px;">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Name</td>
+                        <td>{{ test.user.name.get_full_name }}</td>
+                    </tr>
+                    <tr>
+                        <td>Email</td>
+                        <td>{{ test.user.name.email }}</td>
+                    </tr>
+                    <tr>
+                        <td>Phone</td>
+                        <td>{{ test.user.phone }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="invoice-details">
+            <h1>Package: {{ test.package_name.name }}</h1>
+            <table style="border: 1px solid lightblue; padding: 5px;">
+                <thead>
+                    <tr>
+                        <th>Items</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Price</td>
+                        <td>{{ test.test.price }}</td>
+                    </tr>
+                    <tr>
+                        <td>Paid Amount</td>
+                        <td>{{ bill.paid_amount }}</td>
+                    </tr>
+                    <tr>
+                        <td>VAT</td>
+                        <td>0.0</td>
+                    </tr>
+                    <tr>
+                        <td>Total</td>
+                        <td>{{ test.test.price }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+        {% else %}
+
+    <div class="invoice-header">
+        <table>
+            <tr>
+                <td>
+                    <h1>{{ test.test.hospital.name.get_full_name }}</h1>
+                    <h4>{{ test.test.hospital.address }}, {{ test.test.hospital.division }}-{{ test.test.hospital.zip_code }}</h4>
+                </td>
+                <td>
+                    <div class="invoice-info">
+                        <h2>Test Time and Date</h2>
+                        <p>Test Taking Date: {{ test.test_taking_date }}</p>
+                        <p>Test Taking Time: {{ test.test_taking_time }}</p>
+                        <small class="text-muted">(Please be present at this time)</small>
+                        <p>Token: {{ test.token_num }}</p>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="invoice-body">
+        <div class="patient">
+            <h2>Patient informations</h2>
+            <table style="border: 1px solid lightblue; padding: 5px;">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Name</td>
+                        <td>{{ test.user.name.get_full_name }}</td>
+                    </tr>
+                    <tr>
+                        <td>Email</td>
+                        <td>{{ test.user.name.email }}</td>
+                    </tr>
+                    <tr>
+                        <td>Phone</td>
+                        <td>{{ test.user.phone }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="invoice-details">
+            <h1>Test: {{ test.test.name.name }}</h1>
+            <table style="border: 1px solid lightblue; padding: 5px;">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Price</td>
+                        <td>{{ test.test.price }}</td>
+                    </tr>
+                    <tr>
+                        <td>Paid Amount</td>
+                        <td>{{ bill.paid_amount }}</td>
+                    </tr>
+                    <tr>
+                        <td>VAT</td>
+                        <td>0.0</td>
+                    </tr>
+                    <tr>
+                        <td>Total</td>
+                        <td>{{ test.test.price }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {% endif %}
+    <div>
+        <br>
+        <br>
+        <br>
+        <br>
+        <hr>
+        <br><br>
+        <p style="font-size: 20px;">Please collect this portion of token to get your report and give reviews.</p>
+        <h4>Your verification number: </h4>
+    </div>
+    <div class="footer">
+        <p>Your report will be created in mentioned time provided by our service manager</p>
+    </div>
+</div>
+</body>
+</html>

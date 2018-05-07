@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% block title %}All hospitals{% endblock %}
+{% block stylesheet %}
+  <style>
+  .main-content {
+  margin-top: 100px;
+  }
+  nav{
+  background-color: #1C2331!important;
+  }
+  #single-hospital{
+      border: 1px solid lightblue;
+    height: 250px;
+    box-shadow: 4px 2px 3px 4px lightcyan;
+  }
+  div#single-hospital h5,
+  div#single-hospital p
+  {
+      padding: 10px;
+}
+  .feature-title{
+    border-top: 3px solid lightgray;
+    border-left: 5px solid gray;
+  }
+  .action-btn{
+      position: absolute;
+      bottom: 0;
+  }
+  </style>
+{% endblock %}
+{% block content %}
+  <div class="main-content">
+    <div class="container">
+      <div class="breadcrumbs">
+        <div class="bc-icons-2">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a class="black-text" href="{% url 'medical:index' %}">Home</a><i class="fa fa-caret-right mx-2" aria-hidden="true"></i></li>
+            <li class="breadcrumb-item">Hospitals</li>
+          </ol>
+        </div>
+      </div>
+      <!--Breadcrumbs-->
+      <div class="all-hospital">
+          <div class="hospital-list">
+              <div class="row features-small mt-5 wow fadeIn">
+                {% for h in hospital %}
+                  <!--Grid column-->
+                  <div class="col-xl-3 col-lg-4 col-sm-6 col-12" style="margin-bottom: 20px;">
+                    <div id="single-hospital">
+                      <h5 class="feature-title font-bold mb-1 rgba-green-light"><a href="{% url 'medical:hospital_details' id=h.id %}">{{ h.name.get_full_name }}</a></h5>
+                      <p class="grey-text mt-2">
+                        <i class="fa fa-envelope"></i>: {{ h.email }}<br>
+                        <i class="fa fa-phone"></i>: {{ h.phone }}<br>
+                        <i class="fa fa-map-marker"></i>: {{ h.address }}
+                      </p>
+                      {#                      <a href="" class="mdl-button mdl-js-button mdl-js-ripple-effect">View details</a>#}
+                      <div class="action-btn text-md-center">
+                          <a href="{% url 'medical:hospital_details' id=h.id %}" class="btn btn-default">View details</a>
+                      </div>
+                    </div>
+                  </div>
+                  <!--/Grid column-->
+                {% endfor %}
+              </div>
+
+
+          <nav style="background-color: white!important;">
+    <ul class="pagination pg-purple">
+        <!--Arrow left-->
+        <li class="page-item">
+            {% if hospital.has_previous %}
+                <a href="?page=1" class="page-link" aria-label="Previous">&laquo; first</a>
+                <a href="?page={{ hospital.previous_page_number }}" class="page-link" aria-label="Previous">previous</a>
+            {% endif %}
+        </li>
+
+        <!--Numbers-->
+        {% for i in r %}
+            <li class="page-item" id="page-{{ i }}"><a href="{% url 'medical:all_hospitals' %}?page={{ i }}" class="page-link">{{ i }}</a></li>
+        {% endfor %}
+        <!--Arrow right-->
+        <li class="page-item">
+            {% if hospital.has_next %}
+                <a class="page-link" aria-label="Next" href="?page={{ hospital.next_page_number }}">next</a>
+                <a class="page-link" aria-label="Next" href="?page={{ hospital.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </li>
+    </ul>
+</nav>
+          </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+{% block script %}
+    <script>
+        $(document).ready(function() {
+	    $('.hospital').addClass('active');
+	    let obj="{{ request.GET.page }}";
+	    if (obj){
+	        $('#page-'+obj).addClass('active disabled');
+        }else{
+	        $('#page-1').addClass('active');
+        }
+	});
+    </script>
+{% endblock %}

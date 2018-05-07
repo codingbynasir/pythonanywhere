@@ -1,0 +1,165 @@
+{% extends 'base.html' %}
+{% block title %}{{ hospital.name.get_full_name }}{% endblock %}
+{% block stylesheet %}
+	<style>
+	.main-content {
+	margin-top: 64px;
+	}
+	nav{
+	background-color: #1C2331!important;
+	}
+	span.info {
+	position: absolute;
+	text-align: justify;
+	font-size: 20px;
+	background: rgba(8, 193, 158, 0.58);
+	height: 100%;
+	color: #fff;
+	width: 45%;
+	}
+	.container .row .col-md-3{
+	margin-bottom:2px;
+	}
+	.inner i{
+	padding: 5px;
+	background: #5da30f;
+	color: #fff;
+	}
+	body{
+	background-color: #ecf0f5;
+	}
+	div#content {
+	padding: 0px!important;
+	}
+    select.form-control:not([size]):not([multiple]) {
+        height: auto;
+    }
+	</style>
+	{% load staticfiles %}
+	<link rel="stylesheet" href="{% static 'css/style4.css' %}">
+	<style>
+	a[aria-expanded="false"]::before, a[aria-expanded="true"]::before {
+	content: '';
+	display: block;
+	position: absolute;
+	right: 20px;
+	font-family: 'Glyphicons Halflings';
+	font-size: 0.6em;
+	}
+	div#content {
+	width: 100%;
+	}
+	tbody tr td a i{
+	font-size: 24px!important;
+	}
+    table#my-table thead tr th a{
+        color: #fff;
+    }
+    .breadcrumb ul li i {padding-left: 4px;}
+    .breadcrumb ul li {display: inline-block;}
+    .breadcrumb ul {list-style: none;}
+
+
+    span.commenter{
+        display: flex;
+    }
+    span.comment-text-action{
+        display: none;
+    }
+    tr:hover td span.comment-text-action{
+        display: block;
+    }
+	</style>
+{% endblock %}
+{% block content %}
+	<div class="main-content">
+		<div class="wrapper">
+			<!-- Sidebar Holder -->
+			<nav id="sidebar">
+				<div class="sidebar-header">
+					<a href="{% url 'medical:logged_hospital'%}">
+						<h3>Admin Dashboard</h3>
+						<strong>AD</strong>
+					</a>
+				</div>
+				<ul class="list-unstyled components">
+					<li class="test">
+						<a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false">
+							<i class="fa fa-stethoscope"></i>
+							Tests
+						</a>
+						<ul class="collapse list-unstyled" id="homeSubmenu">
+							{% if request.user.is_authenticated %}
+								<li><a href="{% url 'medical:authorize_tests'%}">View Tests</a></li>
+								<li><a href="{% url 'medical:authorize_test_add' %}">Add Test</a></li>
+							{% endif %}
+						</ul>
+					</li>
+					<li class="package">
+						<a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false">
+							<i class="fa fa-hospital-o"></i>
+							Packages
+						</a>
+						<ul class="collapse list-unstyled" id="pageSubmenu">
+							<li><a href="{% url 'medical:authorize_package_view'%}">View Packages</a></li>
+							<li><a href="{% url 'medical:authorize_package_add' %}">Add package</a></li>
+						</ul>
+					</li>
+					<li class="order">
+						<a href="#orderSubmenu" data-toggle="collapse" aria-expanded="false">
+							<i class="fa fa-shopping-cart"></i>
+							Orders
+						</a>
+						<ul class="collapse list-unstyled" id="orderSubmenu">
+							<li><a href="{% url 'medical:authorize_order' %}">Test</a></li>
+							<li><a href="{% url 'medical:authorize_package_order' %}">Package</a></li>
+						</ul>
+					</li>
+					<li class="archive">
+						<a href="#archiveSubmenu" data-toggle="collapse" aria-expanded="false">
+							<i class="fa fa-archive"></i>
+							Archived orders
+						</a>
+						<ul class="collapse list-unstyled" id="archiveSubmenu">
+							<li><a href="{% url 'medical:authorize_test_order_archive' %}">Test</a></li>
+							<li><a href="{% url 'medical:authorize_package_order_archive' %}">Package</a></li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="list-unstyled CTAs">
+					<li class="feedback"><a href="{% url 'medical:feedback' %}">Feedback</a></li>
+					<li class="review"><a href="{% url 'medical:review' %}">Reviews</a></li>
+				</ul>
+			</nav>
+			<!-- Page Content Holder -->
+			<div id="content">
+				<nav class="navbar navbar-default" style="background: #3f8b9c!important;">
+					<div class="container-fluid">
+						<div class="navbar-header">
+							<button type="button" id="sidebarCollapse" class="btn btn-info navbar-btn">
+							<i class="fa fa-align-left fa-2x"></i>
+							</button>
+						</div>
+						<div class="breadcrumb" style="color: white">
+							{% block breadcrumb %}
+							{% endblock %}
+						</div>
+					</div>
+				</nav>
+				<div class="container">
+					{% block dashboardcontent %}
+					{% endblock %}
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+{% block script %}
+	<script type="text/javascript">
+	$(document).ready(function() {
+	    $('#sidebarCollapse').on('click', function() {
+	        $('#sidebar').toggleClass('active');
+	    });
+	});
+	</script>
+{% endblock %}

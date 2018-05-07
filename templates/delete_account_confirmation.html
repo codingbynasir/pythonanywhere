@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block title %}Delete your account{% endblock %}
+{% block stylesheet %}
+  <style>
+  .main-content {
+  margin-top: 100px;
+  }
+  nav{
+  background-color: #1C2331!important;
+  }
+  </style>
+{% endblock %}
+{% block content %}
+  <div class="main-content">
+    <div class="container">
+      <form action="" method="POST">
+        {% csrf_token %}
+        {#            {{ form.as_p }}#}
+        <div class="form-group" id="dreason">
+          <div class="t"></div>
+          <label for="id_reason" id="label_txt">Reason:</label>
+          <textarea name="reason" id="id_reason" cols="30" rows="10" class="form-control"></textarea>
+        </div>
+        <button class="btn btn-danger">Delete</button>
+      </form>
+    </div>
+  </div>
+{% endblock %}
+{% block script %}
+  <script>
+  $( "form" ).submit(function( event ) {
+  $('p.text-danger').remove();
+  var text=$('textarea').val();
+  if(text.length<50){
+  var more=50-text.length;
+  $("#id_reason").addClass('is-invalid');
+  $("#label_txt").addClass('text-danger');
+  $("#id_reason").after('<p class="text-danger">Please write more '+more+' characters</p>');
+  event.preventDefault();
+  }
+  });
+  {#    $('textarea').keypress(function( event ){#}
+  {#        var t=0;#}
+  {#        var text=$('textarea').val();#}
+  {#        t=+text.length;#}
+  {#        $('.t').text(t);#}
+  {#    });#}
+  </script>
+{% endblock %}

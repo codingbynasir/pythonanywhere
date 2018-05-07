@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+{% block title %}
+    {{ user.username }}
+{% endblock %}
+{% block stylesheet %}
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static 'css/jquery.dynatable.css' %}">
+    <style>
+    .main-content {
+    margin-top: 100px;
+    }
+    nav{
+    background-color: #1C2331!important;
+    }
+    .links {
+    border: 0.05em solid #c1cce8;
+    padding: 10px;
+    box-shadow: 3px 2px 3px lightgrey;
+    }
+    th a{
+    color: white!important;
+    text-decoration: underline;
+    }
+    th{background: #006a72;}
+    .bought-test {
+    border: 1px solid lightblue;
+    margin-top: 50px;
+}
+    div.bought-test h4{
+        background: linear-gradient(#61bedc, #046c8e);
+        color: white;
+        padding: 10px;
+    }
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="main-content">
+        <div class="container wow fadeIn">
+            {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                        <div {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="pr-image">
+                        <img src="{{ patient.image.url }}" alt="" height="300" style="max-width: 375px;">
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="row">
+                        <div class="col-4">Name: </div>
+                        <div class="col-8">{{ user.username }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4">Phone: </div>
+                        <div class="col-8">{{ patient.phone }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4">Email: </div>
+                        <div class="col-8">{{ user.email }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4">Height: </div>
+                        <div class="col-8">{{ patient.height }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4">Weight: </div>
+                        <div class="col-8">{{ patient.weight }} KG</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4">Sex: </div>
+                        <div class="col-8">{{ patient.sex }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4">Is smoker: </div>
+                        <div class="col-8">{{ patient.smoker }}</div>
+                    </div>
+                    <div class="links">
+                        <div class="row">
+                            <div class="col-6"><a href="{% url 'accounts:update_patient' %}">Update info</a></div>
+                            {% if shipping %}
+                                <div class="col-6"><a href="{% url 'accounts:shipping_update' %}">Update shipping info</a></div>
+                                {% else %}
+                                <div class="col-6"><a href="{% url 'accounts:shipping_create' %}">Add shipping info</a></div>
+                            {% endif %}
+                            <div class="col-6"><a href="{% url 'account:changepass' %}">Change password</a></div>
+                            <div class="col-6"><a href="{% url 'accounts:delete_account'%}">Delete account</a></div>
+                            <div class="col-6"><a href="{% url 'accounts:logout' %}">Log out</a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bought-test">
+                <h4>Test are bought by this patient</h4>
+                <table id="my-table" class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Bill</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for test in tests %}
+                            <tr>
+                                <td>{{ test.test.name.name }}</td>
+                                <td>{{ test.test.price }}</td>
+                                <td><a href="{% url 'order_billing:order' id=test.id %}"><i class="fa fa-eye fa-2x"></i></a>  <a href="{% url 'order_billing:delete' pk=test.id %}"><i class="fa fa-trash fa-2x"></i></a></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="bought-test">
+                <h4>Packages are bought by this patient</h4>
+                <table id="pkg-table" class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Bill</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for pack in package %}
+                            <tr>
+                                <td>{{ pack.package_name.name }}</td>
+                                <td>{{ pack.package_name.price }}</td>
+                                <td><a href="{% url 'order_billing:package_order' id=pack.id %}"><i class="fa fa-eye fa-2x"></i></a>  <a href="{% url 'order_billing:delete_package_order' id=pack.id %}"><i class="fa fa-trash fa-2x"></i></a></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script src="{% static 'js/jquery.dynatable.js' %}"></script>
+    <script>
+    $('#my-table').dynatable({
+    table: {
+    defaultColumnIdStyle: 'trimDash'
+    }
+    });
+    $('#pkg-table').dynatable({
+    table: {
+    defaultColumnIdStyle: 'trimDash'
+    }
+    });
+    </script>
+{% endblock %}

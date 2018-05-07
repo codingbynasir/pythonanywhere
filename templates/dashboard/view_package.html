@@ -1,0 +1,156 @@
+{% extends 'dashboard/base_site.html' %}
+{% block title %}
+	{{ request.user.get_full_name }} || Packages
+{% endblock %}
+{% block breadcrumb %}
+	<ul>
+        <li><a href="{% url 'medical:logged_hospital' %}">Dashboard<i class="fa fa-chevron-circle-right"></i></a></li>
+        <li>Package</li>
+    </ul>
+{% endblock %}
+{% block dashboardcontent %}
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <div {% if message.tags %} class="{{ message.tags }}"{% endif %}>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            {{ message }}</div>
+        {% endfor %}
+    </ul>
+    {% endif %}
+	<div class="wow fadeIn">
+        <div class="all-packages">
+            <div class="row">
+                {% if items is None %}
+                    <div class="col-md-12">
+                        <div class="package-add" style="text-align: right">
+                            <a href="{% url 'medical:authorize_package_add' %}" class="btn btn-primary">+Add</a>
+                        </div>
+                        <table id="my-table" class="table table-bordered">
+                            <thead>
+                                <tr style="background: #0f3829;">
+                                    <th>Package Name</th>
+                                    <th>Price</th>
+                                    <th></th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for pack in package %}
+                                    <tr>
+                                        <td>{{ pack.name }}</td>
+                                        <td>{{ pack.price }}</td>
+                                        <td><a href="{% url 'medical:authorize_package_view' %}?p={{ pack.id }}">View Items</a></td>
+                                        <td>
+                                            <a href="{% url 'medical:authorize_package_update' id=pack.id %}" class="text-success"><i class="fa fa-pencil-square"></i></a>
+                                            <a href="" class="text-danger" data-toggle="modal" data-target="#exampleModal" onclick="deletePackage({{ pack.id }})"><i class="fa fa-trash"></i></a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="col-md-8">
+                        <div class="package-add" style="text-align: right">
+                            <a href="{% url 'medical:authorize_package_add' %}" class="btn btn-primary">+Add</a>
+                        </div>
+                        <table id="my-table" class="table table-bordered">
+                            <thead>
+                                <tr style="background: #0f3829;">
+                                    <th>Package Name</th>
+                                    <th>Price</th>
+                                    <th></th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for pack in package %}
+                                    <tr>
+                                        <td>{{ pack.name }}</td>
+                                        <td>{{ pack.price }}</td>
+                                        <td><a href="{% url 'medical:authorize_package_view' %}?p={{ pack.id }}">View Items</a></td>
+                                        <td>
+                                            <a href="{% url 'medical:authorize_package_update' id=pack.id %}" class="text-success"><i class="fa fa-pencil-square"></i></a>
+                                            <a href="" class="text-danger" data-toggle="modal" data-target="#exampleModal" onclick="deletePackage({{ pack.id }})"><i class="fa fa-trash"></i></a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-4">
+                        <h3>Package items</h3>
+                        {% if items %}
+                            <ul>
+                                {% for item in items %}
+                                    {% for i in item.test.all %}
+                                        <li>{{ i }}</li>
+                                        {% empty %}
+                                        <h1>Sorry! No items found</h1>
+                                    {% endfor %}
+                                    {% empty %}
+                                    <h1>Sorry! No items found</h1>
+                                {% endfor %}
+                            </ul>
+                            <a href="{% url 'medical:authorize_package_item_update' id=packid %}" class="btn btn-blue-grey">Update items</a>
+                        {% else %}
+                            <a href="{% url 'medical:authorize_package_item_add' id=packid %}" class="btn btn-success">Add Items</a>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+	</div>
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Delete Package</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <div class="inf"></div>
+                        <input type="hidden" name="package" class="modal-input" id="pack-id" value="">
+                        <label for="pass">Re-enter password:</label>
+                        <input type="password" name="password" class="form-control" id="pass">
+                    </div>
+                    <div class="modal-footer">
+                        <a class="btn btn-secondary" data-dismiss="modal">Close</a>
+                        <button class="btn btn-primary" id="deleteBtn">Delete</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+{% load staticfiles %}
+    <link rel="stylesheet" href="{% static 'css/jquery.dynatable.css' %}">
+    <script src="{% static 'js/jquery.dynatable.js' %}"></script>
+    <script>
+    $(document).ready(function() {
+        $('.package').addClass('active');
+
+        $('button#deleteBtn').click(function (e) {
+            if ($('input#pass').val()==="") {
+                $('#pass').addClass('is-invalid');
+                $('.inf').html('<p class="text-danger">Password is required</p>');
+                e.preventDefault();
+            }
+        });
+	});
+    $('#my-table').dynatable({
+        table: {defaultColumnIdStyle: 'trimDash'}
+    });
+
+    function deletePackage(x) {
+        $('input#pack-id').attr('value', x);
+    }
+    </script>
+{% endblock %}

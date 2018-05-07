@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block title %}
+{{ title }}
+{% endblock %}
+{% block stylesheet %}
+    <style>
+    .main-content {
+    margin-top: 100px;
+    }
+    nav{
+    background-color: #1C2331!important;
+    }
+    form.form {
+        padding: 10px;
+        border: 1px solid lightgray;
+        box-shadow: 1px 1px 5px 1px #aaaace;
+    }
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="main-content">
+        <div class="container wow fadeIn">
+            <div class="breadcrumbs">
+                <div class="bc-icons-2">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a class="black-text" href="{% url 'medical:index' %}">Home</a><i class="fa fa-caret-right mx-2" aria-hidden="true"></i></li>
+                        {% if request.get_full_path == '/shipping/update' %}
+                            <li class="breadcrumb-item">Shipping<i class="fa fa-caret-right mx-2" aria-hidden="true"></i></li>
+                            <li>Update</li>
+                            {% elif request.get_full_path == '/register' %}
+                            <li class="breadcrumb-item">Register</li>
+                            {% else %}
+                            <li>Payment</li>
+                        {% endif %}
+                    </ol>
+                </div>
+            </div>
+            <!--Breadcrumbs-->
+            <form action="" method="POST" class="form">
+                {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                    <div {% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        {{ message }}</div>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                {% csrf_token %}
+                {{ form.as_p }}
+
+                <button class="btn btn-primary">{{ btn }}</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script>
+    $(document).ready(function(){
+    $('form p').addClass('input-group row');
+    $('label').addClass('col-md-3');
+    $('input').addClass('form-control col-md-9');
+    $('select').addClass('form-control');
+    $("#nav-search").removeClass('col-md-9');
+    $('textarea').addClass('form-control col-md-9');
+    $('input#id_city').attr('placeholder','e.g. Dhaka, Comilla, Chittagong etc.');
+    $('input#id_area').attr('placeholder','e.g. Village, Block, Word, Union etc');
+    $('textarea#id_address').attr('placeholder','e.g. House no, Holding no etc');
+    });
+    </script>
+{% endblock %}

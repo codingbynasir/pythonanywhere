@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% block title %}
+    Search result: {{ request.GET.q }}
+{% endblock %}
+{% block stylesheet %}
+    <style>
+    .main-content {
+    margin-top: 100px;
+    }
+    nav{
+    background-color: #1C2331!important;
+    }
+    .panel .search-panel div span a {
+        padding: 0px 50px 8px 50px!important;
+        font-size: 24px;
+        color: #777;
+}
+        .{{ request.GET.type }}-panel{
+            border-bottom: 4px solid #1A73E8;
+            color: #1A73E8!important;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="panel" style="background: #f3f5f7;border-bottom: 1px solid gainsboro;margin-top: 65px; height: 45px;">
+        <div class="container search-panel" style="height: 100%!important;">
+            <div>
+                <span><a href="{% url 'medical:search'%}?q={{ request.GET.q }}&&type=test" class="test-panel">Test</a></span>
+                <span><a href="{% url 'medical:search'%}?q={{ request.GET.q }}&&type=package" class="package-panel">Package</a></span>
+                <span><a href="{% url 'medical:search'%}?q={{ request.GET.q }}&&type=hospital" class="hospital-panel">Hospital</a></span>
+            </div>
+        </div>
+    </div>
+    <div class="main-content">
+        <div class="container">
+            {% if result %}
+                {% for r in result %}
+                    <div class="rst">
+                        <h3 class="r">
+                        <a href="{% url 'medical:signle_test' id=r.id %}" style="color: #609;">{{ r.name }}</a>
+                        </h3>
+                        <p style="color: #006621;">http://127.0.0.1:8000/test/{{ r.id }}</p>
+                        <p class="dtl" style="color: #545454;">
+                            {{ r.category.details }}
+                        </p>
+                    </div>
+                    {% empty %}
+                    <h1>Sorry! No data found</h1>
+                {% endfor %}
+                {% elif package %}
+                    {% for p in package %}
+                        <div class="rst">
+                            <h3 class="r">
+                            <a href="{% url 'medical:package_details' id=p.id %}" style="color: #609;">{{ p.name }}</a>
+                            </h3>
+                            <p style="color: #006621;">http://127.0.0.1:8000/package/{{ p.id }}</p>
+                            <p class="dtl" style="color: #545454;">
+                                {{ p.details }}
+                            </p>
+                        </div>
+                        {% empty %}
+                        <h1>Sorry! No data found</h1>
+                    {% endfor %}
+                {% elif hospital %}
+                    {% for h in hospital %}
+                        <div class="rst">
+                            <h3 class="r">
+                            <a href="{% url 'medical:hospital_details' id=h.id %}" style="color: #609;">{{ h.name.get_full_name }}</a>
+                            </h3>
+                            <p style="color: #006621;">http://127.0.0.1:8000/hospital/{{ h.id }}</p>
+                            <p class="dtl" style="color: #545454;">
+                                <strong>{{ h.type }}</strong>
+                            </p>
+                        </div>
+                        {% empty %}
+                        <h1>Sorry! No data found</h1>
+                    {% endfor %}
+                {% else %}
+                {% for r in test %}
+                    <div class="rst">
+                        <h3 class="r">
+                        <a href="{% url 'medical:signle_test' id=r.id %}" style="color: #609;">{{ r.name }}</a>
+                        </h3>
+                        <p style="color: #006621;">http://127.0.0.1:8000/test/{{ r.id }}</p>
+                        <p class="dtl" style="color: #545454;">
+                            {{ r.category.details }}
+                        </p>
+                    </div>
+                {% endfor %}
+                {% for p in pack %}
+                    <div class="rst">
+                        <h3 class="r">
+                        <a href="{% url 'medical:package_details' id=p.id %}" style="color: #609;">{{ p.name }}</a>
+                        </h3>
+                        <p style="color: #006621;">http://127.0.0.1:8000/package/{{ p.id }}</p>
+                        <p class="dtl" style="color: #545454;">
+                            {{ p.details }}
+                        </p>
+                    </div>
+                {% endfor %}
+                {% for h in hosp %}
+                    <div class="rst">
+                        <h3 class="r">
+                        <a href="{% url 'medical:hospital_details' id=h.id %}" style="color: #609;">{{ h.name.get_full_name }}</a>
+                        </h3>
+                        <p style="color: #006621;">http://127.0.0.1:8000/hospital/{{ h.id }}</p>
+                        <p class="dtl" style="color: #545454;">
+                            <strong>{{ h.type }}</strong>
+                        </p>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+{% endblock %}

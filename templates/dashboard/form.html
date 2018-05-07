@@ -1,0 +1,39 @@
+{% extends 'dashboard/base_site.html' %}
+{% block title %}
+	{{ title }}
+{% endblock %}
+{% block breadcrumb %}
+	<a href="{% url 'medical:logged_hospital' %}">Dashboard</a> >  <a href="{% url 'medical:authorize_tests' %}">View tests</a> > Add Test
+{% endblock %}
+{% block dashboardcontent %}
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <div {% if message.tags %} class="{{ message.tags }}"{% endif %}>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            {{ message }}</div>
+        {% endfor %}
+    </ul>
+    {% endif %}
+	<div class="container wow fadeIn">
+		<form action="" method="POST">
+			{% csrf_token %}
+			{{ form.as_p }}
+			<button class="btn btn-primary">{{ btnTxt }}</button>
+		</form>
+	</div>
+{% endblock %}
+{% block script %}
+	<script>
+	$(document).ready(function() {
+	    $('form p').addClass('input-group row');
+	    $('label').addClass('col-md-3');
+	    $('input').addClass('form-control col-md-9');
+	    $('textarea').addClass('form-control col-md-9');
+	    $('select').addClass('form-control');
+	    $("#nav-search").removeClass('col-md-9');
+	    $('input#id_verify').removeClass('col-md-9 form-control');
+	    $('input#id_is_home_deliverable').removeClass('col-md-9 form-control');
+	});
+	</script>
+{% endblock %}

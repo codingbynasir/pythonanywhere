@@ -1,0 +1,112 @@
+{% extends 'dashboard/base_site.html' %}
+{% block title %}
+{% if type == 'test'%}
+Archive: Test orders
+    {% else %}
+    Archive: Package orders
+{% endif %}
+{% endblock %}
+{% block breadcrumb %}
+    <ul>
+        <li><a href="{% url 'medical:logged_hospital' %}">Dashboard<i class="fa fa-chevron-circle-right"></i></a></li>
+        <li><a href="">Archive<i class="fa fa-chevron-circle-right"></i></a></li>
+        {% if type == 'test' %}
+            <li><a href="">Orders<i class="fa fa-chevron-circle-right"></i></a></li>
+            <li><a href="">Test</a></li>
+            {% elif type == 'package' %}
+            <li><a href="">Orders<i class="fa fa-chevron-circle-right"></i></a></li>
+            <li><a href="">Package</a></li>
+        {% endif %}
+    </ul>
+{% endblock %}
+{% block dashboardcontent %}
+    {% if type == 'test' %}
+        <!--Table-->
+            <table id="my-table" class="table table-bordered">
+                <!--Table head-->
+                <thead class="mdb-color darken-3">
+                    <tr class="text-white">
+                        <th>#</th>
+                        <th>Patient</th>
+                        <th>Test</th>
+                        <th>Contact</th>
+                        <th>Payment status</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <!--Table head-->
+                <!--Table body-->
+                <tbody>
+                    {% for order in order %}
+                            <tr>
+                                <th scope="row">{{ order.id }}</th>
+                                <td>{{ order.user.name.username }}</td>
+                                <td>{{ order.test.name.name }}</td>
+                                <td>{{ order.user.phone }}</td>
+                                <td>{% if order.payment_status == "Not Paid" %}
+                                    <label class="alert-danger">{{ order.payment_status }}</label>
+                                    {% elif order.payment_status == "Partially Paid" %}
+                                    <label class="alert-warning">{{ order.payment_status }}</label>
+                                    {% else %}
+                                    <label class="alert-success">{{ order.payment_status }}</label>
+                                {% endif %}</td>
+                                <td><a href="{% url 'medical:authorize_single_order' id=order.id %}">View details</a></td>
+                            </tr>
+                    {% endfor %}
+                </tbody>
+                <!--Table body-->
+            </table>
+            <!--Table-->
+        {% elif type == 'package' %}
+        <table id="my-table" class="table table-bordered">
+            <!--Table head-->
+            <thead class="mdb-color darken-3">
+                <tr class="text-white">
+                    <th>#</th>
+                    <th>Patient</th>
+                    <th>Package</th>
+                    <th>Contact</th>
+                    <th>Payment status</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <!--Table head-->
+            <!--Table body-->
+            <tbody>
+                {% for order in order %}
+                    <tr>
+                        <th scope="row">{{ order.id }}</th>
+                        <td>{{ order.user.name.username }}</td>
+                        <td>{{ order.package_name.name }}</td>
+                        <td>{{ order.user.phone }}</td>
+                        <td>{% if order.payment_status == "Not Paid" %}
+                            <label class="alert-danger">{{ order.payment_status }}</label>
+                            {% elif order.payment_status == "Partially Paid" %}
+                            <label class="alert-warning">{{ order.payment_status }}</label>
+                            {% else %}
+                            <label class="alert-success">{{ order.payment_status }}</label>
+                        {% endif %}</td>
+                        <td><a href="{% url 'medical:authorize_package_single_order' id=order.id %}">View details</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+            <!--Table body-->
+        </table>
+        <!--Table-->
+    {% endif %}
+{% endblock %}
+{% block script %}
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static 'css/jquery.dynatable.css' %}">
+    <script src="{% static 'js/jquery.dynatable.js' %}"></script>
+    <script>
+    $(document).ready(function() {
+	    $('.archive').addClass('active');
+	});
+    $('#my-table').dynatable({
+    table: {
+    defaultColumnIdStyle: 'trimDash'
+    }
+    });
+    </script>
+{% endblock %}

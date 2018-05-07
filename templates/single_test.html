@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% block title %}{{ single_test.name }}{% endblock %}
+{% block stylesheet %}
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
+    <style>
+    .main-content {
+    margin-top: 100px;
+    }
+    nav{
+    background-color: #1C2331!important;
+    }
+    .datas{
+        margin-bottom: 10px;
+        padding: 0px!important;
+    }
+    .related-test {
+        border: 1px solid rgba(96,125,139,.3);
+    }
+    .related-details {
+        padding: 10px;
+    }
+    ul.related{
+        padding: 0px;
+        list-style-type: none;
+    }
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="main-content">
+        <div class="container">
+            <div class="breadcrumbs">
+                <div class="bc-icons-2">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a class="black-text" href="{% url 'medical:index' %}">Home</a><i class="fa fa-caret-right mx-2" aria-hidden="true"></i></li>
+                        <li class="breadcrumb-item"><a class="black-text" href="{% url 'medical:all_test' %}">Tests</a><i class="fa fa-caret-right mx-2" aria-hidden="true"></i></li>
+                        <li class="breadcrumb-item active">{{ single_test.name }}</li>
+                    </ol>
+                </div>
+            </div>
+            <!--Breadcrumbs-->
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="datas">
+                        <div class="single-test">
+                            <div class="thead rgba-blue-grey-light">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <strong>Test name: </strong>{{ single_test.name }}
+                                    </div>
+                                    <div class="col-md-4">
+                                        Test Category: {{ single_test.category.name }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ttitle">
+                                {{ single_test.name }} is offered from following hospitals
+                            </div>
+                            <div class="tdetails">
+                                <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th>Hospital Name</th>
+                                            <th>Test Price</th>
+                                            <th>Delivered in</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                    <tr>
+                                        <th>Hospital Name</th>
+                                        <th>Test Price</th>
+                                        <th>Delivered in</th>
+                                        <th></th>
+                                    </tr>
+                                    </tfoot>
+                                    <tbody class="wow fadeIn" data-wow-duration="0.5s" data-wow-delay="0.3s">
+                                        {% for t in test %}
+                                            <tr>
+                                                <td>{{ t.hospital.name.get_full_name }}</td>
+                                                <td>{{ t.price }}</td>
+                                                <td>{{ t.delivary_in }}</td>
+                                                <td><a href="{{ t.get_single_url }}">View details</a></td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="related-test">
+                        <div class="related-title text-center rgba-blue-grey-light">
+                            <h3>Related Test</h3>
+                        </div>
+                        <div class="related-details">
+                            {% if related.count != 1 %}
+                                <ul class="related">
+                                {% for related in related %}
+                                    {% if single_test.id != related.id %}
+                                        <li><a href="{% url 'medical:signle_test' id=related.id %}"><i class="fa fa-arrow-circle-right"></i> {{ related.name }}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+                                </ul>
+                                {% else %}
+                                Sorry! No related test found
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+    <script>
+    $(document).ready(function() {
+        $('#example').DataTable();
+    });
+    </script>
+{% endblock %}

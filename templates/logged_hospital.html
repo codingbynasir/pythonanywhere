@@ -1,0 +1,202 @@
+{% extends 'base.html' %}
+{% block title %}{{ hospital.name.get_full_name }}{% endblock %}
+{% block stylesheet %}
+    <style>
+    .main-content {
+    margin-top: 100px;
+    }
+    nav{
+    background-color: #1C2331!important;
+    }
+    span.info {
+    position: absolute;
+    text-align: justify;
+    font-size: 20px;
+    background: rgba(8, 193, 158, 0.58);
+    height: 100%;
+    color: #fff;
+    width: 45%;
+    }
+    .container .row .col-md-3{
+    margin-bottom:2px;
+    }
+    .inner i{
+    padding: 5px;
+    background: #5da30f;
+    color: #fff;
+    }
+    body{
+    background-color: #ecf0f5;
+    }
+    </style>
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static 'css/style4.css' %}">
+    <style>
+    a[aria-expanded="false"]::before, a[aria-expanded="true"]::before {
+    content: '';
+    display: block;
+    position: absolute;
+    right: 20px;
+    font-family: 'Glyphicons Halflings';
+    font-size: 0.6em;
+    }
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="main-content">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3 col-6">
+                    <div class="inner">
+                        <a href="">
+                            <i class="fa fa-stethoscope fa-5x" style="background: rgba(5, 158, 102, 0.79);"></i>
+                            <span class="info text-center">
+                                <h3>Test</h3>
+                                <h2><b>{% if test_number %}
+                                    {{ test_number }}
+                                {% else %}
+                                    0
+                                {% endif %}</b></h2>
+                            </span>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="inner">
+                        <a href="">
+                            <i class="fa fa-user-md fa-5x" style="background: #29AEFF;"></i>
+                            <span class="info text-center" style="background:#007bff;">
+                                <h3>Package</h3>
+                                <h2><b>{% if total_pack %}
+                                    {{ total_pack }}
+                                {% else %}
+                                    0
+                                {% endif %}</b></h2>
+                            </span>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="inner">
+                        <a href="">
+                            <i class="fa fa-shopping-bag fa-5x"></i>
+                            <span class="info text-center" style="background-color: #00c851!important;">
+                                <h3>Orders</h3>
+                                <h2><b>0</b></h2>
+                            </span>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="inner">
+                        <a href="">
+                            <i class="fa fa-exclamation-triangle  fa-5x" aria-hidden="true" style="background: #b93440;"></i>
+                            <span class="info text-center" style="background-color: #ff3547!important;">
+                                <h3>Feedback</h3>
+                                <h2><b>{% if total_feedback %}
+                                    {{ total_feedback }}
+                                {% else %}
+                                    0
+                                {% endif %}</b></h2>
+                            </span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="wrapper">
+            <!-- Sidebar Holder -->
+            <nav id="sidebar">
+                <div class="sidebar-header">
+                    <h3>Bootstrap Sidebar</h3>
+                    <strong>BS</strong>
+                </div>
+                <ul class="list-unstyled components">
+                    <li class="active">
+                        <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false">
+                            <i class="fa fa-home"></i>
+                            Home
+                        </a>
+                        <ul class="collapse list-unstyled" id="homeSubmenu">
+                            <li><a href="#">Home 1</a></li>
+                            <li><a href="#">Home 2</a></li>
+                            <li><a href="#">Home 3</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-briefcase"></i>
+                            About
+                        </a>
+                        <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false">
+                            <i class="fa fa-duplicate"></i>
+                            Pages
+                        </a>
+                        <ul class="collapse list-unstyled" id="pageSubmenu">
+                            <li><a href="#">Page 1</a></li>
+                            <li><a href="#">Page 2</a></li>
+                            <li><a href="#">Page 3</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-link"></i>
+                            Portfolio
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-paperclip"></i>
+                            FAQ
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-send"></i>
+                            Contact
+                        </a>
+                    </li>
+                </ul>
+                <ul class="list-unstyled CTAs">
+                    <li><a href="https://bootstrapious.com/tutorial/files/sidebar.zip" class="download">Download source</a></li>
+                    <li><a href="https://bootstrapious.com/p/bootstrap-sidebar" class="article">Back to article</a></li>
+                </ul>
+            </nav>
+            <!-- Page Content Holder -->
+            <div id="content">
+                <nav class="navbar navbar-default">
+                    <div class="container-fluid">
+                        <div class="navbar-header">
+                            <button type="button" id="sidebarCollapse" class="btn btn-info navbar-btn">
+                            <i class="fa fa-align-left fa-2x"></i>
+                            </button>
+                        </div>
+                        <div class="breadcrumb" style="color: white">
+                            Dashboard>Admin>Medical
+                        </div>
+                    </div>
+                </nav>
+                <h2>Collapsible Sidebar Using Bootstrap 3</h2>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                <div class="line"></div>
+                <h2>Lorem Ipsum Dolor</h2>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                <div class="line"></div>
+                <h2>Lorem Ipsum Dolor</h2>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                <div class="line"></div>
+                <h3>Lorem Ipsum Dolor</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            </div>
+        </div>
+    {% endblock %}
+    {% block script %}
+        <script type="text/javascript">
+        $(document).ready(function () {
+        $('#sidebarCollapse').on('click', function () {
+        $('#sidebar').toggleClass('active');
+        });
+        });
+        </script>
+    {% endblock %}

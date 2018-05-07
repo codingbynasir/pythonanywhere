@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}
+    {{ title }}
+{% endblock %}
+{% block stylesheet %}
+    <style>
+    .main-content {
+    margin-top: 100px;
+    }
+    nav{
+    background-color: #1C2331!important;
+    }
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="main-content">
+        <div class="container wow fadeIn">
+            <div class="account-form">
+                <div class="card">
+                    <div class="card-header deep-orange lighten-1 white-text">
+                        {% if request.get_full_path == '/account/create' %}
+                            Create account
+                            {% else %}
+                            Update account
+                        {% endif %}
+                    </div>
+                    <div class="card-body">
+                        <form action="" method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                            <button class="btn btn-primary">{{ btntext }}</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script>
+    $(document).ready(function(){
+        $('form p').addClass('input-group row');
+        $('label').addClass('col-md-3');
+        $('input').addClass('form-control col-md-9');
+        $('select').addClass('form-control');
+        $("#nav-search").removeClass('col-md-9');
+        $('input#id_birth_date').attr('placeholder','yyyy-mm-dd');
+        $('input#id_weight').attr('placeholder','e.g. nm KG');
+    });
+    </script>
+{% endblock %}

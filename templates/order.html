@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+{% block title %}{{ request.user.username }} is ordered for {{ order.test.name.name }}{% endblock %}
+{% block stylesheet %}
+    <style>
+    .main-content {
+    margin-top: 100px;
+    }
+    nav{
+    background-color: #1C2331!important;
+    }
+    .order div.order-head, .order-details, .order-action {
+    padding: 12px;
+}
+
+.order div.order-head {
+    background: linear-gradient(#e2c7c7, #f9f9f9);
+    border-bottom: 1px solid lightgray;
+}
+.order {
+    background: white;
+    border: 1px solid #e1edf1;
+    box-shadow: 1px 0px 22px 2px lightblue;
+}
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="main-content">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="order">
+                        {% if type == "test" %}
+                            <div class="order-head">
+                                {{ order.user.name.username }} is ordered for {{ order.test.name }}
+                                <span class="float-right"><a href="{% url 'medical:test_details' has_test_id=order.test.id %}" style="font-size: 1.5em;"><i class="fa fa-link" aria-hidden="true"></i></a></span>
+                            </div>
+                            <div class="order-details wow fadeIn" data-wow-duration="0.3s" data-wow-delay="0.3s">
+                                <div class="row">
+                                    <div class="col-4">Test Name</div>
+                                    <div class="col-6">:    {{ order.test.name.name }}</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-4">Test Category</div>
+                                    <div class="col-6">:    {{ order.test.name.category.name }}</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-4">Price</div>
+                                    <div class="col-6">:    {{ order.test.price }}</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-4">Delivered in</div>
+                                    <div class="col-6">:    {{ order.test.delivary_in }} day</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-4">Hospital</div>
+                                    <div class="col-6">:    {{ order.test.hospital.name.get_full_name }}</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-4">Payment status</div>
+                                    <div class="col-6">:    {{ order.payment_status }}</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-4">Token</div>
+                                    <div class="col-6">:    #{{ order.token_num }}</div>
+                                </div>
+                            </div>
+                            <div class="order-action">
+                                {% if billing %}
+                                    {% if verify %}
+                                        {% if billing.paid_amount == order.test.price %}
+                                            {% if is_completed %}
+                                                <a href="" class="btn btn-deep-purple">Get your report</a>
+                                                {% else %}
+                                                <a href="{% url 'order_billing:generate_form' id=order.id %}" target="_blank" class="btn btn-deep-purple">Generate test form</a>
+                                            {% endif %}
+                                            {% else %}
+                                            <a href="{% url 'order_billing:update_payment' id=order.id %}" class="btn btn-info">Update payment</a>
+                                        {% endif %}
+                                        {% else %}
+                                        <a href="{% url 'order_billing:update_payment' id=order.id %}" class="btn btn-info">Update payment</a>
+                                    {% endif %}
+                                {% else %}
+                                <a href="{% url 'billing:delete' pk=order.id %}" class="btn btn-danger">Cancel order</a>
+                                <a href="{% url 'order_billing:payment' id=order.id %}" class="btn btn-success">Verify payment</a>
+                                {% endif %}
+                            </div>
+                            {% elif type == "package" %}
+                            <div class="order-head">
+                                {{ order.user.name.username }} is ordered for {{ order.package_name.name }}
+                            </div>
+                            <div class="order-details">
+                                <div class="row">
+                                    <div class="col-4">Package Name</div>
+                                    <div class="col-6">:    {{ order.package_name.name }}</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-4">Price</div>
+                                    <div class="col-6">:    ৳{{ order.package_name.price }}</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-4">Delivered in</div>
+                                    <div class="col-6">:    {% if order.package_name.delivary_in > 1 %}
+                                        {{ order.package_name.delivary_in }} days
+                                        {% else %}
+                                        {{ order.package_name.delivary_in }} day
+                                    {% endif %}</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-4">Package Items</div>
+                                    <div class="col-6">:
+                                        <ul>
+                                        {% for item in item %}
+                                            {% for i in item.test.all %}
+                                                <li>{{ i }}</li>
+                                                {% empty %}
+                                                <h1>Sorry! No items found</h1>
+                                            {% endfor %}
+                                            {% empty %}
+                                            <h1>Sorry! No items found</h1>
+                                        {% endfor %}
+                                    </ul>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-4">Hospital</div>
+                                    <div class="col-6">:    {{ order.package_name.hospital.name.get_full_name }}</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-4">Payment status</div>
+                                    <div class="col-6">:    {{ order.payment_status }}</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-4">Token</div>
+                                    <div class="col-6">:    #{{ order.token_num }}</div>
+                                </div>
+                            </div>
+                            <div class="order-action">
+                                {% if billing %}
+                                    {% if verified %}
+                                        <a href="{% url 'order_billing:generate_package_form' id=order.id %}" class="btn btn-primary">Generate your report</a>
+                                        {% else %}
+                                        <a href="{% url 'order_billing:update_package_payment' id=order.id %}" class="btn btn-info">Update payment</a>
+                                    {% endif %}
+                                {% else %}
+                                <a href="{% url 'billing:delete' pk=order.id %}" class="btn btn-danger">Cancel order</a>
+                                <a href="{% url 'order_billing:package_payment' id=order.id %}" class="btn btn-success">Verify payment</a>
+                                {% endif %}
+                            </div>
+
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="order">
+                        <div class="order-head">Your another orders</div>
+                        <div class="order-details">
+                            <ol>
+                                {% for a in another %}
+                                    {% if a.id != order.id %}
+                                        <li><a href="{% url 'order_billing:order' id=a.id %}">{{ a.test.name }}</a></li>
+                                    {% endif %}
+                                    {% empty %}
+                                    Sorry No order is found
+                                {% endfor %}
+
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+{% endblock %}

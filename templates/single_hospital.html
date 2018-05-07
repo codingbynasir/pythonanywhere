@@ -1,0 +1,214 @@
+{% extends 'base.html' %}
+{% block title %}{{ hospital.name.get_full_name }}{% endblock %}
+{% block stylesheet %}
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css">
+    <style>
+    .main-content {
+    margin-top: 100px;
+    }
+    nav{
+    background-color: #1C2331!important;
+    }
+    .hospital-body, .hospital-feedback{
+    border: 1px solid #ded6d6;
+    box-shadow: 1px 1px 6px 2px #ccc;
+    margin-bottom: 10px;
+    }
+    .hospital-title, .feedback-title {
+    background: linear-gradient(#d5fbd5, #f6f6f7);
+    border-bottom: 1px solid #d8cfcf;
+    }
+    .hospital-title, .feedback-title, .feedback-form, h4.sub-title{
+    padding: 10px;
+    }
+    .single-commenter {
+    display: flex;
+    }
+
+    p.comment-test {
+    padding: 25px 5px;
+    background: #f9f9f9;
+    border: 1px solid #dfdfdf;
+    border-radius: 3px;
+    clear: both;
+    font-size: 15px;
+    line-height: 1.5em!important;
+    margin: 5px 0 0;
+}
+    .single-feedback:last-child {
+        border-bottom: 0px;
+    }
+    .single-feedback {
+        border-bottom: 1px solid lightgray;
+        padding: 10px;
+    }
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="main-content">
+        <div class="container">
+            <div class="breadcrumbs">
+                <div class="bc-icons-2">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a class="black-text" href="{% url 'medical:index' %}">Home</a><i class="fa fa-caret-right mx-2" aria-hidden="true"></i></li>
+                        <li class="breadcrumb-item"><a class="black-text" href="{% url 'medical:all_hospitals' %}">Hospitals</a><i class="fa fa-caret-right mx-2" aria-hidden="true"></i></li>
+                        <li class="breadcrumb-item">{{ hospital.name.get_full_name }}</li>
+                    </ol>
+                </div>
+            </div>
+            <div class="hospital-details wow fadeIn">
+                <div class="hospital-body">
+                    <div class="hospital-title">
+                        <h2>{{ hospital.name.get_full_name }}</h2>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-7">
+                            <div class="test">
+                                <h4 class="sub-title">Available tests</h4>
+                                <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                    <thead style="text-align: center; background: #235623;color: white;">
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Price</th>
+                                            <th>Delivery</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Price</th>
+                                        <th>Delivery</th>
+                                        <th></th>
+                                    </tr>
+                                    </tfoot>
+                                    <tbody>
+                                        {% for t in tests %}
+                                            <tr>
+                                                <td><a href="{% url 'medical:signle_test' id=t.name.id %}">{{ t.name.name }}</a></td>
+                                                <td>৳ {{ t.price }}</td>
+                                                <td>{% if t.delivary_in > 1 %}
+                                                    {{ t.delivary_in }} days
+                                                    {% else %}
+                                                    {{ t.delivary_in }} day
+                                                {% endif %}</td>
+                                                <td><a href="{% url 'medical:test_details' has_test_id=t.id %}">View</a></td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="package">
+                                <h4 class="sub-title">Available package</h4>
+                                <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                    <thead style="text-align: center; background: #235623;color: white;">
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Price</th>
+                                            <th>Delivery</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Price</th>
+                                        <th>Delivery</th>
+                                        <th></th>
+                                    </tr>
+                                    </tfoot>
+                                    <tbody>
+                                        {% for p in package %}
+                                            <tr>
+                                                <td><a href="{% url 'medical:package_details' id=p.id %}">{{ p.name }}</a></td>
+                                                <td>৳ {{ p.price }}</td>
+                                                <td>{% if p.delivary_in > 1 %}
+                                                    {{ p.delivary_in }} days
+                                                    {% else %}
+                                                    {{ p.delivary_in }} day
+                                                {% endif %}</td>
+                                                <td><a href="{% url 'medical:package_details' id=p.id %}">View</a></td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="hospital-info wow fadeIn">
+                                <div class="card">
+                                    <div class="card-header">
+                                        Basic info
+                                    </div>
+                                    <div class="card-body">
+                                        <h4 class="card-title">About hospital</h4>
+                                        <p class="card-text">
+                                            <div class="row">
+                                                <div class="col-md-3 col-4">Type </div>
+                                                <div class="col-md-9 col-8">: {{ hospital.type }}</div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-3 col-4">Email </div>
+                                                <div class="col-md-9 col-8">: {{ hospital.email }}</div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-3 col-4">Phone </div>
+                                                <div class="col-md-9 col-8">: {{ hospital.phone }}</div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-3 col-4">Address </div>
+                                                <div class="col-md-9 col-8">: {{ hospital.address }}-{{ hospital.zip_code }}</div>
+                                            </div>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-lg-12">
+                        <div class="hospital-feedback wow fadeIn" data-wow-duration="0.5s" data-wow-delay="0.5s">
+                            <div class="feedback-title">
+                                <h3>Feedbacks & comments</h3>
+                            </div>
+                            <div class="all-feedback">
+                                {% for feedback in feedbacks %}
+                                    <div class="single-feedback">
+                                        <div class="single-commenter"><img src="{{ feedback.user.image.url }}" alt="" style="width: 60px;height: 65px;border-radius: 50%;">
+                                            <span class="commenter-name"><h2>{{ feedback.user.name.username }}</h2><p>{{ feedback.date }}</p></span>
+                                        </div>
+                                        <p class="comment-test">{{ feedback.comment|title|safe }}</p>
+                                    </div>
+                                {% endfor %}
+                                </div>  <!--All feedback-->
+                                <div class="feedback-form">
+                                    {% if request.user.is_authenticated %}
+                                        {% if request.session.hospital is None %}
+                                            <form action="" method="POST">
+                                                {% csrf_token %}
+                                                <label for="id_comment">Comment: </label>
+                                                <textarea name="comment" id="id_comment" cols="30" rows="10" class="form-control"></textarea>
+                                                <button class="btn btn-primary">Send</button>
+                                            </form>
+                                        {% endif %}
+                                    {% else %}
+                                        <h3 >*Please <a href="{% url 'accounts:login' %}?next={% url 'medical:hospital_details' id=hospital.id %}">login</a> to post your feedback to this hospital</h3>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+    {% block script %}
+        <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+        <script>
+        $(document).ready(function() {
+            $('#example').DataTable();
+        });
+        </script>
+    {% endblock %}

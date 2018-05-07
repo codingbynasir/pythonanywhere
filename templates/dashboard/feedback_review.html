@@ -1,0 +1,128 @@
+{% extends 'dashboard/base_site.html' %}
+{% block title %}
+    {% if type == 'feedback' %}
+        Hospital feedback and comments
+        {% elif type == 'review' %}
+        All test ratings and reviews
+    {% endif %}
+{% endblock %}
+{% block breadcrumb %}
+    <ul>
+        <li><a href="{% url 'medical:logged_hospital' %}">Dashboard<i class="fa fa-chevron-circle-right"></i></a></li>
+        {% if type == 'feedback' %}
+            <li>Feedback</li>
+            {% elif type == 'review' %}
+            <li>Reviews</li>
+        {% endif %}
+    </ul>
+{% endblock %}
+{% block dashboardcontent %}
+    <div class="feed-review-header">
+        {% if type == 'review' %}
+            <span class="search-filter">
+                <form action="">
+                    <select name="rating" id="" class="form-control-sm">
+                        {% if request.GET.rating %}
+                            <option value="{{ request.GET.rating }}">{{ request.GET.rating }}</option>
+                        {% endif %}
+                        <option value="Best">Best</option>
+                        <option value="Average">Average</option>
+                        <option value="Good">Good</option>
+                        <option value="Excellent">Excellent</option>
+                    </select>
+                    <button>filter</button>
+                </form>
+            </span>
+        {% endif %}
+        <span class="search-fr pull-right">
+            <form action="{{ request.get_full_path }}">
+                <input type="text" name="s" value="{{ request.GET.s }}">
+                <button>Search</button>
+            </form>
+        </span>
+    </div>
+{% if type == 'feedback' %}
+    <div class="feedbacks">
+        <table class="table table">
+            <thead>
+                <tr>
+                    <th>Commenter</th>
+                    <th>Comment</th>
+                    <th>Submitted on</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for list in lists %}
+                    <tr class="wow fadeIn">
+                        <td>
+                            <span class="commenter">
+                                <img src="{{ list.user.image.url }}" alt="{{ list.user.name.get_full_name }}" height="40px">
+                                <span>{{ list.user.name.get_full_name }}<br>{{ list.user.name.email }}</span>
+                            </span>
+                        </td>
+                        <td><span class="comment-text">
+                            {{ list.comment }}
+                            <br>
+                            <span class="comment-text-action">
+                                <a href="">Reply</a>
+                            </span>
+                        </span></td>
+                        <td>{{ list.date }}</td>
+                    </tr>
+                {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+    {% elif type == 'review' %}
+    <div class="review">
+        <table class="table table">
+            <thead>
+                <tr>
+                    <th>Commenter</th>
+                    <th>Ratings</th>
+                    <th>Comment</th>
+                    <th>Proof</th>
+                    <th>Test</th>
+                    <th>Submitted on</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for list in lists %}
+                    <tr class="wow fadeIn">
+                        <td>
+                            <span class="commenter">
+                                <img src="{{ list.user.image.url }}" alt="{{ list.user.name.get_full_name }}" height="40px">
+                                <span>{{ list.user.name.get_full_name }}<br>{{ list.user.name.email }}</span>
+                            </span>
+                        </td>
+                        <td>{{ list.rating }}</td>
+                        <td><span class="comment-text">
+                            {{ list.comments }}
+                            <br>
+                            <span class="comment-text-action">
+                                <a href="">Reply</a>
+                            </span>
+                        </span></td>
+                        <td><a href="{{ list.proof.url }}" target="_blank"><img src="{{ list.proof.url }}" alt="" height="40px"></a></td>
+                        <td><a href="{% url 'medical:test_details' has_test_id=list.test.id %}#all-rating_id">{{ list.test.name.name }}</a></td>
+                        <td>{{ list.date }}</td>
+                    </tr>
+                {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+{% endif %}
+{% endblock %}
+{% block script %}
+<script type="text/javascript">
+	$(document).ready(function() {
+        {% if type == 'feedback' %}
+            $('.feedback').addClass('active');
+            {% elif type == 'review' %}
+            $('.review').addClass('active');
+        {% endif %}
+	});
+	</script>
+{% endblock %}

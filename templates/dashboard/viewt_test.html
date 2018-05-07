@@ -1,0 +1,124 @@
+{% extends 'dashboard/base_site.html' %}
+{% block title %}
+	Test of {{ request.user.get_full_name }}
+{% endblock %}
+{% block breadcrumb %}
+	<ul>
+        <li><a href="{% url 'medical:logged_hospital' %}">Dashboard<i class="fa fa-chevron-circle-right"></i></a></li>
+        <li>Test</li>
+    </ul>
+{% endblock %}
+{% block dashboardcontent %}
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <div {% if message.tags %} class="{{ message.tags }}"{% endif %}>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            {{ message }}</div>
+        {% endfor %}
+    </ul>
+    {% endif %}
+	<div class="test-add" style="text-align: right;">
+		<a href="{% url 'medical:authorize_test_add' %}" class="btn btn-outline-info">Add test</a>
+	</div>
+	<div class="test-table">
+        <table id="my-table" class="table table-bordered">
+            <thead>
+                <tr style="background: #0f3829;">
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Home Deliverable</th>
+                    <th>Delivery in</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Home Deliverable</th>
+                    <th>Delivery in</th>
+                    <th>Action</th>
+                </tr>
+            </tfoot>
+            <tbody class="wow fadeIn" data-wow-duration="0.2s" data-wow-delay="0.2s">
+            {% for test in tests %}
+                <tr>
+                    <td><a href="{% url 'medical:signle_test' id=test.name.id %}" target="_blank">{{ test.name.name }}</a></td>
+                    <td>{{ test.name.category.name }}</td>
+                    <td>৳ {{ test.price }}</td>
+                    <td>{% if test.is_home_deliverable %}
+                        Yes
+                        {% else %}
+                        No
+                    {% endif %}</td>
+                    <td>{% if test.delivary_in < 2 %}
+                        {{ test.delivary_in }} day
+                    {% else %}
+                        {{ test.delivary_in }} days
+                    {% endif %}</td>
+                    <td>
+                        <a href="{% url 'medical:authorize_test_update' id=test.id %}" class="text-success"><i class="fa fa-pencil-square"></i></a>
+                        <a href="" onclick="deleteTest({{ test.id }})" class="text-danger" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-trash"></i></a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Delete test</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <div class="inf"></div>
+                        <input type="hidden" name="test" class="modal-input" id="test-id" value="">
+                        <label for="pass">Re-enter password:</label>
+                        <input type="password" name="password" class="form-control" id="pass">
+                    </div>
+                    <div class="modal-footer">
+                        <a class="btn btn-secondary" data-dismiss="modal">Close</a>
+                        <button class="btn btn-primary" id="deleteBtn">Delete</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block script %}
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static 'css/jquery.dynatable.css' %}">
+    <script src="{% static 'js/jquery.dynatable.js' %}"></script>
+    <script>
+    $(document).ready(function() {
+	    $('.test').addClass('active');
+
+	    $('button#deleteBtn').click(function (e) {
+            if ($('input#pass').val()==="") {
+                $('#pass').addClass('is-invalid');
+                $('.inf').html('<p class="text-danger">Password is required</p>');
+                e.preventDefault();
+            }
+        });
+	});
+    $('#my-table').dynatable({
+    table: {
+    defaultColumnIdStyle: 'trimDash'
+    }
+    });
+    function deleteTest(x) {
+        $('input#test-id').attr('value', x);
+    }
+    </script>
+{% endblock %}

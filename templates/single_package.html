@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+{% block title %}Package: {{ package.name }}{% endblock %}
+{% block stylesheet %}
+    <style>
+    .main-content{
+    margin-top: 100px;
+    }
+    nav{
+    background-color: #1C2331!important;
+    }
+    .package-details, .hospital-details {
+    border: 1px solid #d6dedd;
+    box-shadow: 3px 2px 3px 1px #c1eaf7;
+    margin-bottom: 10px;
+    }
+    .package-header .row, .package-body, .package-items, .hospital-header, .hospital-info{
+    padding: 10px;
+    }
+    .package-header, .hospital-header {
+    background: linear-gradient(#fbfafa, #daf1f7);
+    }
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="main-content">
+        <div class="container">
+            <div class="breadcrumbs">
+                <div class="bc-icons-2">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a class="black-text" href="{% url 'medical:index' %}">Home</a><i class="fa fa-caret-right mx-2" aria-hidden="true"></i></li>
+                        <li class="breadcrumb-item"><a class="black-text" href="{% url 'medical:test_packages' %}">Packages</a><i class="fa fa-caret-right mx-2" aria-hidden="true"></i></li>
+                        <li class="breadcrumb-item">{{ package.name }}</li>
+                    </ol>
+                </div>
+            </div>
+            <!--Breadcrumbs-->
+            <div class="single-package">
+                <div class="package-details">
+                    <div class="package-header">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h3>Package: {{ package.name }}</h3>
+                            </div>
+                            <div class="col-md-4">
+                                <h5>Price: {{ package.price }}‎৳</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="package-body">
+                        <p>{{ package.details }}</p>
+                    </div>
+                    <div class="package-items">
+                        <h4 class="">Package Items</h4>
+                        <hr>
+                        <ul>
+                            {% for item in items %}
+                                {% for i in item.test.all %}
+                                    <li>{{ i }}</li>
+                                    {% empty %}
+                                    <h1>Sorry! No items found</h1>
+                                {% endfor %}
+                                {% empty %}
+                                <h1>Sorry! No items found</h1>
+                            {% endfor %}
+                        </ul>
+                        <div class="cart-btn text-center">
+                            <div class="row">
+                                <div class="col-md-6"></div>
+                                <div class="col-md-6">
+                                    {% if request.user.is_authenticated %}
+                                        {% if request.session.hospital %}
+                                            {% if request.session.hospital == package.hospital.name.username %}
+                                                <a href="{% url 'medical:authorize_package_update' id=package.id %}" class="btn btn-outline-dark">Update package</a>
+                                            {% endif %}
+                                            {% else %}
+                                            {% if is_bought %}
+                                                <a href="{% url 'order_billing:package_order' id=orderId %}" class="btn btn-cyan">View order</a>
+                                                <p class="text-muted">You already ordered for this package</p>
+                                            {% else %}
+                                                <form action="" method="POST">
+                                                    {% csrf_token %}
+                                                    <button class="btn btn-primary">Buy now</button>
+                                                </form>
+                                            {% endif %}
+                                        {% endif %}
+                                    {% else %}
+                                        <a href="{% url 'accounts:login' %}?next={% url 'medical:package_details' id=package.id %}" class="btn btn-primary">Buy Now</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hospital-details">
+                    <h3 class="hospital-header">Hospital info:</h3>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="hospital-info">
+                                <p>Name: {{ package.hospital.name.get_full_name }}</p>
+                                <p>Type: {{ package.hospital.type }}</p>
+                                <p>Email: {{ package.hospital.email }}</p>
+                                <p>Phone: {{ package.hospital.phone }}</p>
+                                <p>Address: {{ package.hospital.address }}, {{ package.hospital.division }} - {{ package.hospital.zip_code }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-7">
+                            <iframe width="600" height="450" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?key=AIzaSyA43-pm17h9AYwodjdvqYMVXc3z60BaJX0&q={{ package.hospital.name.get_full_name }}" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}{% endblock %}
+{% block stylesheet %}
+    <style>
+    .main-content {
+    margin-top: 100px;
+    }
+    nav{
+    background-color: #1C2331!important;
+    }
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="main-content">
+        <div class="container">
+            <div class="breadcrumbs">
+                <div class="bc-icons-2">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a class="black-text" href="{% url 'medical:index' %}">Home</a><i class="fa fa-caret-right mx-2" aria-hidden="true"></i></li>
+                        <li class="breadcrumb-item">Packages</li>
+                    </ol>
+                </div>
+            </div>
+            <!--Breadcrumbs-->
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+{% endblock %}
